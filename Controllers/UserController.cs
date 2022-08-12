@@ -14,7 +14,7 @@ public class UserController : Controller
         _context = context;
     }
 
-    [HttpPost("/user/login")]
+    [HttpPost("/users/login")]
     public async Task<IActionResult> Login([FromBody] UserReqClass reqBody)
     {
         try
@@ -33,7 +33,7 @@ public class UserController : Controller
         }
     }
 
-    [HttpPost("/user/create")]
+    [HttpPost("/users/create")]
     public async Task<IActionResult> CreateUser([FromBody] UserClass reqBody)
     {
         try
@@ -49,6 +49,16 @@ public class UserController : Controller
             Console.WriteLine(e);
             throw;
         }
+        
+// Find users matching criteria: POST "/user/find"
+// Find Profile to update: GET "/user/updateProfile"
+// Update Profile POST "/user/updateProfile"
+// Delete Profile DELETE "/users/delete"
+// check friends GET "/users/checkfriends"
+// add an Friend put("/user/addFriend"
+// Delete Friend put("/deleteFriend/"
+
+
     }
 }
 // {
