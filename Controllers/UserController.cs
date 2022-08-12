@@ -1,3 +1,4 @@
+using System.Xml.Schema;
 using CSFriendCircle.Data;
 using CSFriendCircle.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,8 +14,8 @@ public class UserController : Controller
     {
         _context = context;
     }
-
-    [HttpPost("/users/login")]
+// Login
+    [HttpPost("/user/login")]
     public async Task<IActionResult> Login([FromBody] UserReqClass reqBody)
     {
         try
@@ -32,15 +33,15 @@ public class UserController : Controller
             throw;
         }
     }
-
-    [HttpPost("/users/create")]
+// Create User
+    [HttpPost("/user/create")]
     public async Task<IActionResult> CreateUser([FromBody] UserClass reqBody)
     {
         try
         {
             _context.User.Add(reqBody);
             await _context.SaveChangesAsync();
-            UserClass newUser = await _context.User.FirstAsync( x => x.Email == reqBody.Email);
+            UserClass newUser = await _context.User.FirstAsync(x => x.Email == reqBody.Email);
             //UserClass newUser2 = await _context.User.FindAsync(reqBody.Id);
             return Ok(newUser.Id);
         }
@@ -49,9 +50,27 @@ public class UserController : Controller
             Console.WriteLine(e);
             throw;
         }
-        
+    }
+
 // Find users matching criteria: POST "/user/find"
+    [HttpPost("/user/find")]
+    public async Task<IActionResult> GetUsers([FromBody] SearchUserReqClass reqBody)
+    {
+        List<UserClass> users = await _context.Set<UserClass>().Where(x => x.Age > reqBody.MinAge).ToListAsync();
+        if (reqBody.Gender != "any")
+        {
+            users = users.Where(x => x.Gender == reqBody.Gender).ToList();
+        }
+        if (reqBody.Interests!=null && reqBody.Interests.Length > 0)
+        {
+            users = users.Where(x => x.Interests.Contains(reqBody.Interests)).ToList();
+        }
+        //IQueryable<>
+        //&& x.Gender!="any"?x.Age<reqBody.MaxAge && x.Gender== reqBody.Gender:
+        return Ok(users);
+    }
 // Find Profile to update: GET "/user/updateProfile"
+
 // Update Profile POST "/user/updateProfile"
 // Delete Profile DELETE "/users/delete"
 // check friends GET "/users/checkfriends"
@@ -59,7 +78,6 @@ public class UserController : Controller
 // Delete Friend put("/deleteFriend/"
 
 
-    }
 }
 // {
 // "Name":"Matthias",
