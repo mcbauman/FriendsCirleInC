@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "FoI4RrZztX8TOC3CPHpPvNbdeEf0oCU/kCsfSo3ge24=",
+  "Hash": "CjAaVnBZdoWiOXpVdL2yyi5MZZXuu4FatYwI7CSoHy4=",
   "Source": "CSFriendCircle",
   "BasePath": "_content/CSFriendCircle",
   "Mode": "Default",
@@ -16,40 +16,6 @@
     }
   ],
   "Assets": [
-    {
-      "Identity": "/Users/matthias.baumann/learningCS/CSFriendCircle/obj/Debug/net6.0/scopedcss/bundle/CSFriendCircle.styles.css",
-      "SourceId": "CSFriendCircle",
-      "SourceType": "Computed",
-      "ContentRoot": "/Users/matthias.baumann/learningCS/CSFriendCircle/obj/Debug/net6.0/scopedcss/bundle/",
-      "BasePath": "_content/CSFriendCircle",
-      "RelativePath": "CSFriendCircle.styles.css",
-      "AssetKind": "All",
-      "AssetMode": "CurrentProject",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "ScopedCss",
-      "AssetTraitValue": "ApplicationBundle",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "/Users/matthias.baumann/learningCS/CSFriendCircle/obj/Debug/net6.0/scopedcss/bundle/CSFriendCircle.styles.css"
-    },
-    {
-      "Identity": "/Users/matthias.baumann/learningCS/CSFriendCircle/obj/Debug/net6.0/scopedcss/projectbundle/CSFriendCircle.bundle.scp.css",
-      "SourceId": "CSFriendCircle",
-      "SourceType": "Computed",
-      "ContentRoot": "/Users/matthias.baumann/learningCS/CSFriendCircle/obj/Debug/net6.0/scopedcss/projectbundle/",
-      "BasePath": "_content/CSFriendCircle",
-      "RelativePath": "CSFriendCircle.bundle.scp.css",
-      "AssetKind": "All",
-      "AssetMode": "Reference",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "ScopedCss",
-      "AssetTraitValue": "ProjectBundle",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "/Users/matthias.baumann/learningCS/CSFriendCircle/obj/Debug/net6.0/scopedcss/projectbundle/CSFriendCircle.bundle.scp.css"
-    },
     {
       "Identity": "/Users/matthias.baumann/learningCS/CSFriendCircle/wwwroot/css/site.css",
       "SourceId": "CSFriendCircle",

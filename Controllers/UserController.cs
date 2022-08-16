@@ -1,18 +1,44 @@
-using System.Xml.Schema;
 using CSFriendCircle.Data;
 using CSFriendCircle.Models;
+using CSFriendCircle.Security;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CSFriendCircle.Controllers;
 
 public class UserController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly PasswordHandler _hashPassword;
+    private readonly IConfiguration _configuration;
 
-    public UserController(ApplicationDbContext context)
+    public UserController(ApplicationDbContext context,PasswordHandler hashPassword,IConfiguration configuration)
     {
         _context = context;
+        _hashPassword = hashPassword;    
+        _configuration = configuration;
+    }
+    
+// CreateToken
+    public string CreateToken(UserClass user)
+    {
+        List<Claim> claims = new List<Claim> 
+        {
+            new Claim(ClaimTypes.Name, user.Id.ToString()),
+        };
+        var key = new SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+        var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        var token = new JwtSecurityToken(
+            claims: claims,
+            expires:DateTime.Now.AddDays(1),
+            signingCredentials:cred);
+        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+        return jwt;
     }
 // Login
     [HttpPost("/user/login")]
@@ -21,11 +47,11 @@ public class UserController : Controller
         try
         {
             UserClass currentUser = await _context.User.FirstAsync(x => x.Email == reqBody.Email);
-            if (currentUser.Password != reqBody.Password)
+            if (!_hashPassword.PasswordMatch(reqBody.Password,currentUser.Password))
             {
                 return Ok("Password missmatch");
             }
-            return Ok(currentUser.Id);
+            return Ok(CreateToken(currentUser));
         }
         catch (Exception e)
         {
@@ -39,11 +65,11 @@ public class UserController : Controller
     {
         try
         {
+            reqBody.Password = _hashPassword.HashPassword(reqBody.Password);
             _context.User.Add(reqBody);
             await _context.SaveChangesAsync();
             UserClass newUser = await _context.User.FirstAsync(x => x.Email == reqBody.Email);
-            //UserClass newUser2 = await _context.User.FindAsync(reqBody.Id);
-            return Ok(newUser.Id);
+            return Ok(CreateToken(newUser));
         }
         catch (Exception e)
         {
@@ -70,7 +96,11 @@ public class UserController : Controller
         return Ok(users);
     }
 // Find Profile to update: GET "/user/updateProfile"
-
+    [HttpGet("user/updateProfile")]
+    public async Task<IActionResult> GetUserToUpdate([FromBody] SearchUserReqClass reqBody)
+    {
+        return Ok(reqBody);
+    }
 // Update Profile POST "/user/updateProfile"
 // Delete Profile DELETE "/users/delete"
 // check friends GET "/users/checkfriends"
