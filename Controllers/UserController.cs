@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CSFriendCircle.Controllers;
@@ -28,7 +29,7 @@ public class UserController : Controller
     {
         List<Claim> claims = new List<Claim> 
         {
-            new Claim(ClaimTypes.Name, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.Id.ToString())
         };
         var key = new SymmetricSecurityKey(
             System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
@@ -79,7 +80,7 @@ public class UserController : Controller
     }
 
 // Find users matching criteria: POST "/user/find"
-    [HttpPost("/user/find")]
+    [HttpPost("/user/find"),Authorize]
     public async Task<IActionResult> GetUsers([FromBody] SearchUserReqClass reqBody)
     {
         List<UserClass> users = await _context.Set<UserClass>().Where(x => x.Age > reqBody.MinAge).ToListAsync();
@@ -96,10 +97,11 @@ public class UserController : Controller
         return Ok(users);
     }
 // Find Profile to update: GET "/user/updateProfile"
-    [HttpGet("user/updateProfile")]
-    public async Task<IActionResult> GetUserToUpdate([FromBody] SearchUserReqClass reqBody)
+    [HttpGet("user/updateProfile"),Authorize]
+    public async Task<IActionResult> GetUserToUpdate()
     {
-        return Ok(reqBody);
+        UserClass currentUser = await _context.User.FindAsync(new Guid(User.Identity.Name));
+        return Ok(currentUser);
     }
 // Update Profile POST "/user/updateProfile"
 // Delete Profile DELETE "/users/delete"
